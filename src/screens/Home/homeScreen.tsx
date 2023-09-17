@@ -1,27 +1,23 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Keyboard, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
+import {Keyboard, Text, TouchableOpacity, View} from 'react-native';
+import GlobalTextInput from '../../components/GlobalTextInput';
 import {RESPONSES, TEXTS} from '../../config/texts';
-import {palette, spacing} from '../../style';
-import {SpendingType} from '../../types';
-import {addSpending, getSpendings} from '../../util/storage';
+import {InputStyle, palette, spacing} from '../../style';
+import {addSpending} from '../../util/storage';
 import {showToast} from '../../util/toast';
+import DatePicker from 'react-native-date-picker';
 
 export default function HomeScreen() {
-  // const [spendings, setSpendings] = useState<SpendingType[]>(getSpendings());
-  const [spendings, setSpendings] = useState<SpendingType[]>([]);
-  console.log(spendings);
-  const inputRef = useRef(null);
   const [name, setName] = useState<string>('');
   const [amout, setAmount] = useState<number>(0);
+  const [date, setDate] = useState(new Date());
+  const [dateModalState, setDateModalState] = useState(false);
 
-  const handleGetSpendings = () => {
-    let tempspending = getSpendings();
-    setSpendings(tempspending);
+  const resetInputs = () => {
+    setName('');
+    setAmount(0);
+    setDate(new Date());
   };
-
-  useEffect(() => {
-    handleGetSpendings();
-  }, []);
 
   const handleAddNewItem = () => {
     console.log(name);
@@ -37,52 +33,46 @@ export default function HomeScreen() {
     addSpending(name, amout);
     showToast('success', RESPONSES.SUCCESSFULLY_ADDED_SPENDING);
     Keyboard.dismiss();
-    handleGetSpendings();
+    resetInputs();
+    // handleGetSpendings();
   };
 
   return (
     <View style={{padding: spacing.double}}>
-      <Text style={{textAlign: 'center'}}>Wallet Tracker</Text>
-
-      <View>
-        {spendings.map((e: SpendingType) => {
-          return (
-            <View key={e.name}>
-              <Text>{e.name}</Text>
-              <Text>{e.amount}</Text>
-            </View>
-          );
-        })}
-      </View>
+      <Text style={{textAlign: 'center', color: palette.primary, fontSize: 20}}>
+        Wallet Tracker
+      </Text>
       <View style={{marginVertical: spacing.double}}>
         <View style={{marginVertical: spacing.single}}>
-          <TextInput
-            onChangeText={e => {
-              setName(e);
-            }}
-            style={{
-              borderRadius: spacing.single,
-              borderWidth: 2,
-              padding: spacing.single,
-            }}
+          <GlobalTextInput
             placeholder={TEXTS.NAME}
-            ref={inputRef}
+            onChangeText={e => setName(e)}
           />
         </View>
         <View style={{marginVertical: spacing.single}}>
-          <TextInput
-            keyboardType="decimal-pad"
-            onChangeText={e => {
-              setAmount(Number(e) || 0);
-            }}
-            style={{
-              borderRadius: spacing.single,
-              borderWidth: 2,
-              padding: spacing.single,
-            }}
+          <GlobalTextInput
             placeholder={TEXTS.AMOUNT}
-            ref={inputRef}
+            onChangeText={e => setAmount(Number(e))}
           />
+        </View>
+        <View style={{marginVertical: spacing.single}}>
+          <TouchableOpacity
+            onPress={() => setDateModalState(!dateModalState)}
+            style={InputStyle}>
+            <Text>{new Date(date).toLocaleDateString()}</Text>
+            <DatePicker
+              modal
+              open={dateModalState}
+              date={date}
+              onConfirm={date => {
+                setDateModalState(false);
+                setDate(date);
+              }}
+              onCancel={() => {
+                setDateModalState(false);
+              }}
+            />
+          </TouchableOpacity>
         </View>
       </View>
       <TouchableOpacity

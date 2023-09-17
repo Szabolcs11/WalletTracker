@@ -1,41 +1,40 @@
-import {View, Text} from 'react-native';
-import React, {useCallback} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createStackNavigator} from '@react-navigation/stack';
-import {TabNavigatorParamsList} from '../../types';
-import {SCREENS} from '../constans';
+import {NavigationContainer} from '@react-navigation/native';
+import React, {useCallback} from 'react';
 import Icon, {IconType} from 'react-native-dynamic-vector-icons';
 import HomeScreen from '../../screens/Home/homeScreen';
 import ListScreen from '../../screens/List/listScreen';
-import {palette, spacing} from '../../style';
 import StatisticsScreen from '../../screens/Statistics/statisticsScreen';
-import {NavigationContainer} from '@react-navigation/native';
+import {palette, spacing} from '../../style';
+import {TabNavigatorParamsList} from '../../types';
+import {SCREENS} from '../constans';
 import {navigationRef} from './settings';
 
 export default function index() {
   const Tab = createBottomTabNavigator<TabNavigatorParamsList>();
-  const renderTabIcon = (
-    route: any,
-    focused: boolean,
-    color: string,
-    size: number,
-  ) => {
+
+  const renderTabIcon = (route: any, focused: boolean) => {
     let iconName: string;
+    let iconColor: string;
     switch (route.name) {
       case SCREENS.HOME:
         iconName = focused ? 'home' : 'home-outline';
+        iconColor = focused ? palette.white : palette.gray;
         break;
       case SCREENS.LIST:
         iconName = focused ? 'list' : 'list-outline';
+        iconColor = focused ? palette.white : palette.gray;
         break;
       case SCREENS.STATISTICS:
         iconName = focused ? 'bar-chart' : 'bar-chart-outline';
+        iconColor = focused ? palette.white : palette.gray;
         break;
       default:
         iconName = 'home';
+        iconColor = focused ? palette.white : palette.gray;
         break;
     }
-    return <Icon type={IconType.Ionicons} name={iconName} />;
+    return <Icon type={IconType.Ionicons} color={iconColor} name={iconName} />;
   };
 
   const RenderTabNavigation = useCallback((a: any) => {
@@ -43,8 +42,7 @@ export default function index() {
       <Tab.Navigator
         screenOptions={({route}) => ({
           headerShown: false,
-          tabBarIcon: ({focused, color, size}) =>
-            renderTabIcon(route, focused, color, size),
+          tabBarIcon: ({focused}) => renderTabIcon(route, focused),
           tabBarActiveTintColor: palette.white,
           tabBarInactiveTintColor: palette.gray,
           tabBarActiveBackgroundColor: palette.primary,
