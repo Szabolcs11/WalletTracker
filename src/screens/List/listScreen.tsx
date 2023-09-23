@@ -4,10 +4,16 @@ import {formatDate} from '../../config/globalFunctions';
 import {palette, spacing} from '../../style';
 import {SpendingType} from '../../types';
 import {getSpendings} from '../../util/storage';
-import {FlatListItemStyle} from './listScreenStyle';
+import {FlatListItemStyle, ItemTextStyle} from './listScreenStyle';
+
+export let updateList: () => void;
 
 export default function ListScreen() {
   const [spendings, setSpendings] = useState<SpendingType[]>([]);
+
+  updateList = () => {
+    handleGetSpendings();
+  };
 
   const handleGetSpendings = () => {
     let tempspending = getSpendings();
@@ -25,6 +31,7 @@ export default function ListScreen() {
       </Text>
       <View style={{marginVertical: spacing.double}}>
         <FlatList
+          inverted
           contentContainerStyle={{
             alignItems: 'center',
             width: '100%',
@@ -32,12 +39,10 @@ export default function ListScreen() {
           data={spendings}
           renderItem={({item}) => {
             return (
-              <View key={item.name} style={FlatListItemStyle}>
-                <Text style={{color: palette.white}}>{item.name}</Text>
-                <Text style={{color: palette.white}}>{item.amount}</Text>
-                <Text style={{color: palette.white}}>
-                  {formatDate(item.date)}
-                </Text>
+              <View key={item.date} style={FlatListItemStyle}>
+                <Text style={ItemTextStyle}>{item.category}</Text>
+                <Text style={ItemTextStyle}>{item.amount}</Text>
+                <Text style={ItemTextStyle}>{formatDate(item.date)}</Text>
               </View>
             );
           }}

@@ -1,14 +1,12 @@
 import { MMKV } from 'react-native-mmkv';
-import { getFullDate } from '../config/globalFunctions';
-const storage = new MMKV();
 
+const storage = new MMKV();
 const key = "spending"
 
 // Add new spending to the list
-export const addSpending = (name: string, amount: number) => {
+export const addSpending = (name: string, amount: number, date:string) => {
     let currentSpendings = getSpendings() || [];
-    let date = getFullDate();
-    let input = {name, amount, date}
+    let input = {category:name, amount, date: date}
     currentSpendings.push(input)
     storage.set(key, JSON.stringify(currentSpendings));
 }

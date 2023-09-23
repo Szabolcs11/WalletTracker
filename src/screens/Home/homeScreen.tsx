@@ -3,15 +3,22 @@ import {Keyboard, Text, TouchableOpacity, View} from 'react-native';
 import GlobalTextInput from '../../components/GlobalTextInput';
 import {RESPONSES, TEXTS} from '../../config/texts';
 import {InputStyle, palette, spacing} from '../../style';
-import {addSpending} from '../../util/storage';
+import {addSpending, clearAllSpending} from '../../util/storage';
 import {showToast} from '../../util/toast';
 import DatePicker from 'react-native-date-picker';
+import {updateList} from '../List/listScreen';
+import DropDownPicker from 'react-native-dropdown-picker';
+import {CATEGORIES} from '../../config/constans';
+import {sortDataForPie} from '../Statistics/statisticsScreen';
 
 export default function HomeScreen() {
   const [name, setName] = useState<string>('');
   const [amout, setAmount] = useState<number>(0);
   const [date, setDate] = useState(new Date());
   const [dateModalState, setDateModalState] = useState(false);
+
+  const [drodownModalState, setDropdownModalState] = useState(false);
+  const [categoryValue, setcategoryValue] = useState(null);
 
   const resetInputs = () => {
     setName('');
@@ -20,9 +27,7 @@ export default function HomeScreen() {
   };
 
   const handleAddNewItem = () => {
-    console.log(name);
-    console.log(amout);
-    if (name.trim().length <= 3) {
+    if (categoryValue == null) {
       showToast('error', RESPONSES.FILL_THE_NAME);
       return;
     }
@@ -30,10 +35,16 @@ export default function HomeScreen() {
       showToast('error', RESPONSES.FILL_THE_AMOUNT);
       return;
     }
-    addSpending(name, amout);
+    addSpending(categoryValue, amout, date.toString());
     showToast('success', RESPONSES.SUCCESSFULLY_ADDED_SPENDING);
     Keyboard.dismiss();
     resetInputs();
+    if (updateList) {
+      updateList();
+    }
+    if (sortDataForPie) {
+      sortDataForPie();
+    }
     // handleGetSpendings();
   };
 
@@ -42,15 +53,26 @@ export default function HomeScreen() {
       <Text style={{textAlign: 'center', color: palette.primary, fontSize: 20}}>
         Wallet Tracker
       </Text>
+      {/* <Text>{CURRENCY_API_URL}</Text> */}
       <View style={{marginVertical: spacing.double}}>
         <View style={{marginVertical: spacing.single}}>
-          <GlobalTextInput
+          {/* <GlobalTextInput
             placeholder={TEXTS.NAME}
             onChangeText={e => setName(e)}
+          /> */}
+          <DropDownPicker
+            style={[InputStyle]}
+            placeholder="Válasz kategóriát"
+            open={drodownModalState}
+            value={categoryValue}
+            items={CATEGORIES}
+            setOpen={setDropdownModalState}
+            setValue={setcategoryValue}
           />
         </View>
         <View style={{marginVertical: spacing.single}}>
           <GlobalTextInput
+            inputMode="decimal"
             placeholder={TEXTS.AMOUNT}
             onChangeText={e => setAmount(Number(e))}
           />
