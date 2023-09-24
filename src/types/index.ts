@@ -1,4 +1,5 @@
 export type SpendingType = {
+  id: string;
   category: string;
   amount: number;
   date: string;
