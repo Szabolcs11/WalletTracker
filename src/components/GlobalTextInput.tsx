@@ -1,13 +1,7 @@
 import React from 'react';
 import {InputModeOptions, TextInput, View} from 'react-native';
 import {InputStyle} from '../style';
-
-type GlobalTextInputProps = {
-  placeholder: string;
-  value?: string;
-  onChangeText: (text: string) => void;
-  inputMode?: InputModeOptions;
-};
+import {GlobalTextInputProps} from '../types';
 
 export default function GlobalTextInput({
   inputMode,

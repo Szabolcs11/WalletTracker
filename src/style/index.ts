@@ -1,3 +1,6 @@
+import { Text, StyleSheet, Dimensions } from "react-native";
+const {width, height} = Dimensions.get('screen')
+
 const unit=8;
 export const spacing = {
     half: unit/2,
@@ -22,7 +25,7 @@ export const InputStyle = {
     borderRadius: spacing.single,
     // borderColor: palette.primary,
     borderColor: palette.black,
-    borderWidth: 2,
+    borderWidth: 1,
     padding: spacing.single,
 }
 
@@ -31,3 +34,19 @@ export const TitleStyle = {
     fontSize: 16,
     textAlign: 'center'
 }
+
+export const ButtonStyle = StyleSheet.create({
+    buttom: {
+        backgroundColor: palette.primary,
+        borderRadius: spacing.single,
+        margin: spacing.double,
+        alignSelf: 'center',
+    },
+    text: {
+        color: palette.white,
+        paddingVertical: spacing.single,
+        paddingHorizontal: spacing.triple,
+        fontSize: 16,
+        fontWeight: '500',
+    }
+})

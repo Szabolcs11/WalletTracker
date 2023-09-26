@@ -4,7 +4,10 @@ export const TEXTS = {
     AMOUNT: "Amount",
     YES: "Yes",
     NO: "No",
-    ARE_YOU_SURE_TO_DELETE: "Are you sure to dele this spending?"
+    ARE_YOU_SURE_TO_DELETE: "Are you sure to dele this spending?",
+    ALL: "All",
+    ALL_DATE: "All date",
+    SELECT_DATE: "Select a date (All)"
 }
 
 export const RESPONSES = {

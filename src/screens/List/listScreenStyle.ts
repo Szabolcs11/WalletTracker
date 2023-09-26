@@ -1,4 +1,4 @@
-import { Text, StyleProp, ViewStyle, TextStyle, Dimensions, StyleSheet } from "react-native"
+import { StyleProp, ViewStyle, TextStyle, Dimensions, StyleSheet } from "react-native"
 import { palette, spacing } from "../../style"
 
 const {width, height} = Dimensions.get('screen')
@@ -8,9 +8,6 @@ export const FlatListItemStyle: StyleProp<ViewStyle>  = {
     backgroundColor: palette.primary,
     marginVertical: spacing.single,
     flexDirection: 'row',
-    // justifyContent: 'space-around',
-    // justifyContent: 'center',
-    width: 300,
     borderRadius: spacing.single,
 }
 
@@ -28,7 +25,7 @@ export const DeleteSpendingModalStyle = StyleSheet.create({
         position: "absolute",
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 1
+        zIndex: 2
     },
     modal: {
         backgroundColor: palette.white,
