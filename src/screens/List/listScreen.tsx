@@ -6,9 +6,12 @@ import GlobalFlatList from '../../components/GlobalFlatList';
 import {TEXTS} from '../../config/texts';
 import {palette, spacing} from '../../style';
 import {ListSpendingType, SpendingType} from '../../types';
-import {sortData} from '../../util/sortSpendings';
+import {
+  getWeeksWithSpending,
+  getSpendingsGroupByDate,
+} from '../../util/formatSpendings';
 import {deleteSpending, getSpendings} from '../../util/storage';
-import {sortDataForPie} from '../Statistics/statisticsScreen';
+import {updateCharts} from '../Statistics/statisticsScreen';
 
 export let updateList: () => void;
 
@@ -22,6 +25,7 @@ export default function ListScreen() {
     useState<string>('');
   const [searchedSpendings, setSearchedSpendings] =
     useState<ListSpendingType[]>();
+  const [weeks, setWeeks] = useState<string[]>([]);
 
   updateList = () => {
     handleGetSpendings();
@@ -37,17 +41,19 @@ export default function ListScreen() {
     setSpendings(prev => prev.filter(e => e.id != selectedSpendingId));
     setSelectedSpendingId('');
     setShowDeleteSpendingModal(false);
-    if (sortDataForPie) {
-      sortDataForPie();
+    if (updateCharts) {
+      updateCharts();
     }
   };
 
   useEffect(() => {
     handleGetSpendings();
+    let weeks = getWeeksWithSpending();
+    setWeeks(weeks);
   }, []);
 
   useEffect(() => {
-    if (selectedDropdownValue == TEXTS.ALL) {
+    if (selectedDropdownValue == TEXTS.SELECT_DATE_ALL) {
       setSearchedSpendings(datas);
     } else {
       setSearchedSpendings(
@@ -58,7 +64,7 @@ export default function ListScreen() {
 
   useEffect(() => {
     if (spendings.length > 0) {
-      let data = sortData(spendings);
+      let data = getSpendingsGroupByDate(spendings);
       setDatas(data);
       setSearchedSpendings(data);
     }
@@ -85,15 +91,8 @@ export default function ListScreen() {
         </Text>
         <View style={{marginVertical: spacing.double}}>
           <GlobalDropDownPicker
-            datas={[
-              {label: TEXTS.ALL_DATE, value: TEXTS.ALL},
-              ...(datas
-                ? datas?.map(e => ({
-                    label: e.weekRange,
-                    value: e.weekRange,
-                  }))
-                : []),
-            ]}
+            datas={weeks}
+            placeholder={TEXTS.SELECT_DATE_ALL}
             setValue={setSelectedDropdownValue}
             value={selectedDropdownValue}
           />

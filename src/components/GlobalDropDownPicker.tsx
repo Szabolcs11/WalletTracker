@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {TEXTS} from '../config/texts';
 import {DropDownPickerProps} from '../types';
 
 export default function GlobalDropDownPicker({
   datas,
   setValue,
   value,
+  placeholder,
 }: DropDownPickerProps) {
   const [open, setOpen] = useState<boolean>(false);
 
@@ -15,10 +15,18 @@ export default function GlobalDropDownPicker({
       zIndex={1}
       open={open}
       value={value}
-      items={datas}
+      items={[
+        {label: placeholder, value: placeholder},
+        ...(datas
+          ? datas?.map(e => ({
+              label: e,
+              value: e,
+            }))
+          : []),
+      ]}
       setOpen={setOpen}
       setValue={setValue}
-      placeholder={TEXTS.SELECT_DATE}
+      placeholder={placeholder}
     />
   );
 }

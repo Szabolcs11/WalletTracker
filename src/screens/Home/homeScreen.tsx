@@ -10,7 +10,8 @@ import {palette, spacing} from '../../style';
 import {addSpending} from '../../util/storage';
 import {showToast} from '../../util/toast';
 import {updateList} from '../List/listScreen';
-import {sortDataForPie} from '../Statistics/statisticsScreen';
+import {updateCharts} from '../Statistics/statisticsScreen';
+import {getWeeksWithSpending} from '../../util/formatSpendings';
 
 export default function HomeScreen() {
   const [amout, setAmount] = useState<number>(0);
@@ -38,8 +39,8 @@ export default function HomeScreen() {
     if (updateList) {
       updateList();
     }
-    if (sortDataForPie) {
-      sortDataForPie();
+    if (updateCharts) {
+      updateCharts();
     }
   };
 
@@ -53,6 +54,7 @@ export default function HomeScreen() {
           datas={CATEGORIES}
           setValue={setcategoryValue}
           value={categoryValue}
+          placeholder={TEXTS.SELECT_ITEM}
         />
         <GlobalTextInput
           inputMode="decimal"

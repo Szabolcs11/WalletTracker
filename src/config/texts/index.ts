@@ -7,7 +7,9 @@ export const TEXTS = {
     ARE_YOU_SURE_TO_DELETE: "Are you sure to dele this spending?",
     ALL: "All",
     ALL_DATE: "All date",
-    SELECT_DATE: "Select a date (All)"
+    SELECT_DATE_ALL: "Select a date (All)",
+    SELECT_DATE: "Select a date",
+    SELECT_ITEM: "Select an item"
 }
 
 export const RESPONSES = {

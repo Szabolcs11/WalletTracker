@@ -30,15 +30,11 @@ export type DeleteModalProps = {
   closeModal: () => void;
 }
 
-type ModalType = {
-  label: string;
-  value: string;
-}
-
 export type DropDownPickerProps = {
-  datas: ModalType[];
+  datas?: string[];
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
+  placeholder: string;
 }
 
 export type GlobalFlatListProps = {
@@ -54,4 +50,22 @@ export type GlobalDatePickerProps = {
 export type GlobalButtonProps = {
   label: string;
   callback: () => void;
+}
+
+export type BarComponentProps = {
+  height: number;
+  index: number;
+  day: string
+  value: number;
+  date: string;
+}
+
+export type BarChartType = {
+  Day: string;
+  Spendings: number;
+  Date: string
+}
+
+export type BarChartProps = {
+  data: BarChartType[]
 }
