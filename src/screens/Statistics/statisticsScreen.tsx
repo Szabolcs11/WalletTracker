@@ -29,8 +29,7 @@ export default function StatisticsScreen() {
 
   useEffect(() => {
     updateCharts();
-    let total = getTotalSpending();
-    setTotalAmountSpent(total);
+    getTotalSpendings();
     setIsLoading(false);
   }, []);
 
@@ -51,7 +50,13 @@ export default function StatisticsScreen() {
     setSelectedData(spendingByDay);
     setAmountSpentInWeek(spentInWeek);
     getPieChartData(selectedDropdownValue);
+    getTotalSpendings();
     setIsLoading(false);
+  };
+
+  const getTotalSpendings = () => {
+    let total = getTotalSpending();
+    setTotalAmountSpent(total);
   };
 
   updateCharts = () => {

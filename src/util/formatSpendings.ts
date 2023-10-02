@@ -141,8 +141,8 @@ export const getWeeksWithSpending = () => {
         return dateA.getTime() - dateB.getTime();
     });
 
-    const earliestDate = new Date(inputData[0].date);
-    const latestDate = new Date(inputData[inputData.length - 1].date);
+    const earliestDate = new Date(inputData[0]?.date);
+    const latestDate = new Date(inputData[inputData.length - 1]?.date);
 
     let currentWeekStart = getWeekStartDate(earliestDate);
     let weeks = []
