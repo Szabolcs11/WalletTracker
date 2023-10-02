@@ -11,10 +11,9 @@ import {addSpending} from '../../util/storage';
 import {showToast} from '../../util/toast';
 import {updateList} from '../List/listScreen';
 import {updateCharts} from '../Statistics/statisticsScreen';
-import {getWeeksWithSpending} from '../../util/formatSpendings';
 
 export default function HomeScreen() {
-  const [amout, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<number>(0);
   const [date, setDate] = useState(new Date());
   const [categoryValue, setcategoryValue] = useState<string>('');
 
@@ -28,11 +27,11 @@ export default function HomeScreen() {
       showToast('error', RESPONSES.FILL_THE_NAME);
       return;
     }
-    if (amout.toString().trim().length <= 1) {
+    if (amount.toString().trim().length <= 1) {
       showToast('error', RESPONSES.FILL_THE_AMOUNT);
       return;
     }
-    addSpending(categoryValue, amout, date.toString());
+    addSpending(categoryValue, amount, date.toString());
     showToast('success', RESPONSES.SUCCESSFULLY_ADDED_SPENDING);
     Keyboard.dismiss();
     resetInputs();
@@ -51,15 +50,17 @@ export default function HomeScreen() {
       </Text>
       <View style={{marginVertical: spacing.double, gap: spacing.double}}>
         <GlobalDropDownPicker
+          adddefaultitem
           datas={CATEGORIES}
           setValue={setcategoryValue}
           value={categoryValue}
           placeholder={TEXTS.SELECT_ITEM}
         />
         <GlobalTextInput
-          inputMode="decimal"
+          inputMode="numeric"
           placeholder={TEXTS.AMOUNT}
-          onChangeText={e => setAmount(Number(e))}
+          value={amount}
+          onChangeText={setAmount}
         />
         <GlobalDatePicker
           date={date}

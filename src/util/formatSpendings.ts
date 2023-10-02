@@ -166,3 +166,43 @@ export const getTotalSpending = () => {
     })
     return total;
 }
+
+export const getPieChartDataInWeek = (weekRange: string) => {
+    const inputData = getSpendingsGroupByDate()
+    let weekItems = inputData.filter((e) => e.weekRange === weekRange)
+    let categorisedSpendings: any = {}
+    weekItems[0].items.forEach((item: SpendingType) => {
+        const {category, amount} = item;
+        if (categorisedSpendings[category]) {
+            categorisedSpendings[category] += amount;
+        } else {
+            categorisedSpendings[category] = amount;
+        }
+      });
+
+    const sortedCategories = Object.keys(categorisedSpendings).map(category => ({
+      category,
+      color: getCategoryColor(category),
+      legendFontColor: getCategoryColor(category),
+      totalAmount: categorisedSpendings[category],
+      name: category,
+    }));
+    sortedCategories.sort((a, b) => a.category.localeCompare(b.category));
+    return sortedCategories;
+}
+
+const getCategoryColor = (category: string) => {
+    category == 'Élelmiszer'
+    switch (category) {
+        case 'Élelmiszer':
+          return '#e74645';
+        case 'Alkohol':
+          return '#fb7756';
+        case 'Szükségletek':
+          return '#facd60';
+        case 'Utazás':
+          return '#1ac0c6';
+        default:
+          return '#000';
+      }
+}

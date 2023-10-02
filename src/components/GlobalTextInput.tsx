@@ -1,5 +1,5 @@
 import React from 'react';
-import {InputModeOptions, TextInput, View} from 'react-native';
+import {TextInput, View} from 'react-native';
 import {InputStyle} from '../style';
 import {GlobalTextInputProps} from '../types';
 
@@ -14,8 +14,15 @@ export default function GlobalTextInput({
       <TextInput
         inputMode={inputMode}
         placeholder={placeholder}
-        value={value}
-        onChangeText={onChangeText}
+        value={value.toString()}
+        onChangeText={text => {
+          const parsedValue = parseFloat(text);
+          if (!isNaN(parsedValue)) {
+            onChangeText(parsedValue);
+          } else {
+            onChangeText(0);
+          }
+        }}
         style={InputStyle}
       />
     </View>

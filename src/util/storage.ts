@@ -9,7 +9,7 @@ const key = "spending"
 export const addSpending = (name: string, amount: number, date:string) => {
     let currentSpendings = getSpendings() || [];
     let input = {
-        id: uuid.v4(), 
+        id: String(uuid.v4()), 
         category:name, 
         amount, 
         date
@@ -31,5 +31,5 @@ export const clearAllSpending = () => {
 
 //Get all of the spendings
 export const getSpendings = () => {
-    return JSON.parse(storage.getString(key) || "[]");
+    return JSON.parse(storage.getString(key) || "[]") as SpendingType[];
 }

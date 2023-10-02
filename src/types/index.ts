@@ -20,8 +20,8 @@ export type TabNavigatorParamsList = {
 
 export type GlobalTextInputProps = {
   placeholder: string;
-  value?: string;
-  onChangeText: (text: string) => void;
+  value: number;
+  onChangeText: (text: number) => void;
   inputMode?: InputModeOptions;
 };
 
@@ -35,6 +35,7 @@ export type DropDownPickerProps = {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   placeholder: string;
+  adddefaultitem: boolean;
 }
 
 export type GlobalFlatListProps = {
@@ -68,4 +69,12 @@ export type BarChartType = {
 
 export type BarChartProps = {
   data: BarChartType[]
+}
+
+export type PieChartDataType = {
+  category: string;
+  color: string;
+  legendFontColor: string;
+  totalAmount: any;
+  name: string;
 }

@@ -15,7 +15,7 @@ export default function Bar({
       <View
         style={[
           BarChartStyle.bardatacontainer,
-          {bottom: index % 2 == 0 ? -40 : -80},
+          {bottom: index % 2 == 0 ? -50 : -90},
         ]}>
         <Text>{day}</Text>
         <Text>{date}</Text>

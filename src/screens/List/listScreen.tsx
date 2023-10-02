@@ -12,6 +12,7 @@ import {
 } from '../../util/formatSpendings';
 import {deleteSpending, getSpendings} from '../../util/storage';
 import {updateCharts} from '../Statistics/statisticsScreen';
+import LoadingComponent from '../../components/LoadingComponent';
 
 export let updateList: () => void;
 
@@ -26,6 +27,7 @@ export default function ListScreen() {
   const [searchedSpendings, setSearchedSpendings] =
     useState<ListSpendingType[]>();
   const [weeks, setWeeks] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   updateList = () => {
     handleGetSpendings();
@@ -34,6 +36,7 @@ export default function ListScreen() {
   const handleGetSpendings = () => {
     let tempspending = getSpendings();
     setSpendings(tempspending);
+    setIsLoading(false);
   };
 
   const handleDeleteItem = () => {
@@ -70,6 +73,10 @@ export default function ListScreen() {
     }
   }, [spendings]);
 
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
+
   return (
     <>
       {showDeleteSpendingModal ? (
@@ -91,6 +98,7 @@ export default function ListScreen() {
         </Text>
         <View style={{marginVertical: spacing.double}}>
           <GlobalDropDownPicker
+            adddefaultitem
             datas={weeks}
             placeholder={TEXTS.SELECT_DATE_ALL}
             setValue={setSelectedDropdownValue}
