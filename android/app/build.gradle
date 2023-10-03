@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.wallettracker.dev"
+    namespace "com.wallettracker"
     defaultConfig {
-        applicationId "com.wallettracker.dev"
+        applicationId "com.wallettracker"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
