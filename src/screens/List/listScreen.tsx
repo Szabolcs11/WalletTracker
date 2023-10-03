@@ -4,12 +4,9 @@ import DeleteModal from '../../components/DeleteModal';
 import GlobalDropDownPicker from '../../components/GlobalDropDownPicker';
 import GlobalFlatList from '../../components/GlobalFlatList';
 import {TEXTS} from '../../config/texts';
-import {palette, spacing} from '../../style';
+import {Container, palette, spacing} from '../../style';
 import {ListSpendingType, SpendingType} from '../../types';
-import {
-  getWeeksWithSpending,
-  getSpendingsGroupByDate,
-} from '../../util/formatSpendings';
+import {getWeeksWithSpending, getSpendingsGroupByDate} from '../../util/formatSpendings';
 import {deleteSpending, getSpendings} from '../../util/storage';
 import {updateCharts} from '../Statistics/statisticsScreen';
 import LoadingComponent from '../../components/LoadingComponent';
@@ -18,14 +15,11 @@ export let updateList: () => void;
 
 export default function ListScreen() {
   const [spendings, setSpendings] = useState<SpendingType[]>([]);
-  const [showDeleteSpendingModal, setShowDeleteSpendingModal] =
-    useState<boolean>(false);
+  const [showDeleteSpendingModal, setShowDeleteSpendingModal] = useState<boolean>(false);
   const [selectedSpendingId, setSelectedSpendingId] = useState<string>('');
-  const [datas, setDatas] = useState<ListSpendingType[]>();
-  const [selectedDropdownValue, setSelectedDropdownValue] =
-    useState<string>('');
-  const [searchedSpendings, setSearchedSpendings] =
-    useState<ListSpendingType[]>();
+  const [groupedSpendings, setGroupedSpendings] = useState<ListSpendingType[]>();
+  const [selectedDropdownValue, setSelectedDropdownValue] = useState<string>('');
+  const [searchedSpendings, setSearchedSpendings] = useState<ListSpendingType[]>();
   const [weeks, setWeeks] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -57,18 +51,16 @@ export default function ListScreen() {
 
   useEffect(() => {
     if (selectedDropdownValue == TEXTS.SELECT_DATE_ALL) {
-      setSearchedSpendings(datas);
+      setSearchedSpendings(groupedSpendings);
     } else {
-      setSearchedSpendings(
-        datas?.filter(e => e.weekRange == selectedDropdownValue),
-      );
+      setSearchedSpendings(groupedSpendings?.filter(e => e.weekRange == selectedDropdownValue));
     }
   }, [selectedDropdownValue]);
 
   useEffect(() => {
     if (spendings.length > 0) {
       let data = getSpendingsGroupByDate(spendings);
-      setDatas(data);
+      setGroupedSpendings(data);
       setSearchedSpendings(data);
     }
   }, [spendings]);
@@ -91,12 +83,19 @@ export default function ListScreen() {
       ) : (
         <></>
       )}
-      <View style={{padding: spacing.double}}>
+      <View style={Container}>
         <Text
-          style={{textAlign: 'center', color: palette.primary, fontSize: 20}}>
+          style={{
+            textAlign: 'center',
+            color: palette.primary,
+            fontSize: 20,
+          }}>
           Expenses
         </Text>
-        <View style={{marginVertical: spacing.double}}>
+        <View
+          style={{
+            marginVertical: spacing.double,
+          }}>
           <GlobalDropDownPicker
             adddefaultitem
             datas={weeks}

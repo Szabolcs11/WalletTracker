@@ -1,4 +1,4 @@
-import { Text, StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, StyleProp, Dimensions, TextStyle, ViewStyle } from "react-native";
 const {width, height} = Dimensions.get('screen')
 
 const unit=8;
@@ -29,10 +29,14 @@ export const InputStyle = {
     padding: spacing.single,
 }
 
-export const TitleStyle = {
+export const TitleStyle: StyleProp<TextStyle> = {
+    textAlign: 'center',
     color: palette.primary,
-    fontSize: 16,
-    textAlign: 'center'
+    fontSize: 20
+}
+
+export const Container: StyleProp<ViewStyle> = {
+    padding: spacing.double
 }
 
 export const ButtonStyle = StyleSheet.create({
