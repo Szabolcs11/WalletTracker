@@ -6,7 +6,7 @@ import GlobalDropDownPicker from '../../components/GlobalDropDownPicker';
 import GlobalTextInput from '../../components/GlobalTextInput';
 import {CATEGORIES} from '../../config/constans';
 import {RESPONSES, TEXTS} from '../../config/texts';
-import {palette, spacing} from '../../style';
+import {Container, TitleStyle, spacing} from '../../style';
 import {addSpending} from '../../util/storage';
 import {showToast} from '../../util/toast';
 import {updateList} from '../List/listScreen';
@@ -44,10 +44,8 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={{padding: spacing.double}}>
-      <Text style={{textAlign: 'center', color: palette.primary, fontSize: 20}}>
-        Wallet Tracker
-      </Text>
+    <View style={Container}>
+      <Text style={TitleStyle}>Wallet Tracker</Text>
       <View style={{marginVertical: spacing.double, gap: spacing.double}}>
         <GlobalDropDownPicker
           adddefaultitem

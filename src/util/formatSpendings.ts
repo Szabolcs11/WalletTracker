@@ -18,6 +18,9 @@ export const getSpendingsGroupByDate = (data?: SpendingType[]) => {
     } else {
         alldata = data;
     }
+    if (alldata.length == 0) {
+      return [{weekRange: "", items: []}]
+    }
 
     alldata.sort((a, b) => {
         const dateA = new Date(a.date);
@@ -25,8 +28,8 @@ export const getSpendingsGroupByDate = (data?: SpendingType[]) => {
         return dateA.getTime() - dateB.getTime();
     });
 
-    const earliestDate = new Date(alldata[0].date);
-    const latestDate = new Date(alldata[alldata.length - 1].date);
+    const earliestDate = new Date(alldata[0]?.date);
+    const latestDate = new Date(alldata[alldata.length - 1]?.date);
 
     let currentWeekStart = getWeekStartDate(earliestDate);
     let all = [];
@@ -92,44 +95,84 @@ const translateDaysOfWeekToHungarian = (DayOfWeek: string) => {
       }
 }
 
-// Return all of the Spendings in 1 specific Week
+function formatDateWithLeadingZeros(date: Date): string {
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${month}/${day}`;
+}
+
+// Return all of the Spendings in a specific Week Range
 export const getWeeklySpendings = (weekRange: string) => {
-  const inputData = getSpendingsGroupByDate()
+  let spendingsByDay: BarChartType[] = [];
+  const inputData = getSpendingsGroupByDate();
+  let weekItems = inputData.filter((e) => e.weekRange === weekRange);
+  const spendingsByDayMap = new Map<string, { Spendings: number; Date: string, Day: string }>();
 
-  const spendingsByDay: BarChartType[] = [];
+  const [startDateStr, endDateStr] = weekRange.split(' - ');
+  const startDate = new Date(startDateStr);
+  const endDate = new Date(endDateStr);
 
+  const weeklySpendings = [];
 
-  let weekItems = inputData.filter((e) => e.weekRange === weekRange)
+  // Set every day to Spending be 0
+  let currentDate = startDate;
+  while (currentDate <= endDate) {
+    const formattedDate = formatDateWithLeadingZeros(currentDate);
+    const dayOfWeek = translateDaysOfWeekToHungarian(currentDate.toLocaleDateString('en-US', { weekday: 'long' }).split(',')[0]);
 
-  const spendingsByDayMap = new Map<string, { Spendings: number, Date: string }>();
+    weeklySpendings.push({
+      Date: formattedDate,
+      Day: dayOfWeek,
+      Spendings: 0,
+    });
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  // Adding these itemts to spendingsByDayMap function
+  weeklySpendings.forEach((value) => {
+    spendingsByDayMap.set(value.Date, {Spendings: 0, Day: value.Day!, Date: value.Date})
+  })
+
   weekItems[0].items.forEach((item) => {
     const itemDate = new Date(item.date);
-    const dayOfWeek = translateDaysOfWeekToHungarian(itemDate.toLocaleDateString('en-US', { weekday: 'long' }).split(',')[0]);
-    const dayKey = dayOfWeek + "|" + itemDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
-
+    const dayKey = itemDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
     if (spendingsByDayMap.has(dayKey)) {
       spendingsByDayMap.get(dayKey)!.Spendings += item.amount;
-    } else {
-      spendingsByDayMap.set(dayKey, {
-        Spendings: item.amount,
-        Date: itemDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' })
-      });
     }
   });
 
   let spentInWeek = 0;
   spendingsByDayMap.forEach((value, key) => {
     spentInWeek += value.Spendings
-    const [dayOfWeek, date] = key.split('|');
     spendingsByDay.push({
-      Day: dayOfWeek,
+      Day: value.Day,
       Spendings: value.Spendings,
-      Date: date
+      Date: value.Date
     });
   });
 
-  return {spendingByDay: spendingsByDay.reverse(), spentInWeek};
-}
+
+  let lastNonZeroIndex = -1;
+
+  // Find the index of the last not zero spending entry
+  for (let i = spendingsByDay.length - 1; i >= 0; i--) {
+    if (spendingsByDay[i].Spendings !== 0) {
+      lastNonZeroIndex = i;
+      break;
+    }
+  }
+
+  // If a last non-zero entry was found, remove subsequent entries with zero spending
+  const todayDate = new Date()
+
+  if (lastNonZeroIndex !== -1) {
+    spendingsByDay = spendingsByDay.filter((entry, index) => {
+      const entryDate = new Date(entry.Date);
+      return index <= lastNonZeroIndex || (entry.Spendings !== 0 && entryDate <= currentDate);
+    });
+  }
+
+  return { spendingByDay: spendingsByDay, spentInWeek };
+};
 
 // Return all of the Weeks With Spending
 export const getWeeksWithSpending = () => {
@@ -155,6 +198,7 @@ export const getWeeksWithSpending = () => {
         currentWeekStart.setDate(currentWeekStart.getDate() + 7);
         weeks.push(weekRange)
     }
+    console.log("weeks", weeks)
     return weeks.reverse();
 }
 

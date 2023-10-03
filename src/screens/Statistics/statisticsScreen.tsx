@@ -4,7 +4,7 @@ import {PieChart} from 'react-native-chart-kit';
 import GlobalBarChart from '../../components/GlobalBarChart/GlobalBarChart';
 import GlobalDropDownPicker from '../../components/GlobalDropDownPicker';
 import {TEXTS} from '../../config/texts';
-import {palette, spacing} from '../../style';
+import {Container, TitleStyle, palette, spacing} from '../../style';
 import {
   getPieChartDataInWeek,
   getTotalSpending,
@@ -17,12 +17,10 @@ import LoadingComponent from '../../components/LoadingComponent';
 export let updateCharts: () => void;
 
 export default function StatisticsScreen() {
-  const [sortedData, setSortedData] = useState<PieChartDataType[]>([]);
   const [weeks, setWeeks] = useState<string[]>([]);
-  const [selectedDropdownValue, setSelectedDropdownValue] = useState<string>(
-    TEXTS.SELECT_DATE,
-  );
-  const [selectedData, setSelectedData] = useState<BarChartType[]>([]);
+  const [selectedDropdownValue, setSelectedDropdownValue] = useState<string>(TEXTS.SELECT_DATE);
+  const [pieChartData, setPieChartData] = useState<PieChartDataType[]>([]);
+  const [barChartData, setBarChartData] = useState<BarChartType[]>([]);
   const [amountSpentInWeek, setAmountSpentInWeek] = useState<number>(-1);
   const [totalAmountSpent, setTotalAmountSpent] = useState<number>(-1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -39,15 +37,13 @@ export default function StatisticsScreen() {
 
   const dropDownValueChanges = (value: string) => {
     if (value == TEXTS.SELECT_DATE) {
-      setSelectedData([]);
+      setBarChartData([]);
       setAmountSpentInWeek(-1);
       return;
     }
     setIsLoading(true);
-    let {spendingByDay, spentInWeek} = getWeeklySpendings(
-      selectedDropdownValue,
-    );
-    setSelectedData(spendingByDay);
+    let {spendingByDay, spentInWeek} = getWeeklySpendings(selectedDropdownValue);
+    setBarChartData(spendingByDay);
     setAmountSpentInWeek(spentInWeek);
     getPieChartData(selectedDropdownValue);
     getTotalSpendings();
@@ -62,12 +58,17 @@ export default function StatisticsScreen() {
   updateCharts = () => {
     let weeks = getWeeksWithSpending();
     setWeeks(weeks);
-    dropDownValueChanges(selectedDropdownValue);
+    if (weeks.length == 0) {
+      dropDownValueChanges(TEXTS.SELECT_DATE);
+      setPieChartData([]);
+    } else {
+      dropDownValueChanges(selectedDropdownValue);
+    }
   };
 
   const getPieChartData = (weekRange: string) => {
     let data = getPieChartDataInWeek(weekRange);
-    setSortedData(data);
+    setPieChartData(data);
   };
 
   if (isLoading) {
@@ -75,10 +76,8 @@ export default function StatisticsScreen() {
   }
 
   return (
-    <ScrollView style={{padding: spacing.double}}>
-      <Text style={{textAlign: 'center', color: palette.primary, fontSize: 20}}>
-        Statistics
-      </Text>
+    <ScrollView style={Container}>
+      <Text style={TitleStyle}>Statistics</Text>
       <View style={{marginVertical: spacing.double}}>
         <GlobalDropDownPicker
           adddefaultitem={false}
@@ -88,16 +87,16 @@ export default function StatisticsScreen() {
           value={selectedDropdownValue}
         />
         <View style={{marginVertical: spacing.double}}>
-          <GlobalBarChart data={selectedData} />
+          <GlobalBarChart data={barChartData} />
         </View>
         <View
           style={{
             marginVertical: spacing.double,
-            backgroundColor: sortedData.length != 0 ? palette.white : undefined,
+            backgroundColor: pieChartData.length != 0 ? palette.white : undefined,
             borderRadius: spacing.single,
           }}>
           <PieChart
-            data={sortedData}
+            data={pieChartData}
             width={330}
             height={220}
             chartConfig={{
