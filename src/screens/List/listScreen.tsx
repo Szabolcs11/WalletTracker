@@ -90,7 +90,7 @@ export default function ListScreen() {
             color: palette.primary,
             fontSize: 20,
           }}>
-          Expenses
+          {TEXTS.EXPENSES}
         </Text>
         <View
           style={{

@@ -57,9 +57,13 @@ export default function index() {
             borderTopRightRadius: spacing.double,
           },
         })}>
-        <Tab.Screen name={'Home'} component={HomeScreen} />
-        <Tab.Screen name={'List'} component={ListScreen} />
-        <Tab.Screen name={'Statistics'} component={StatisticsScreen} />
+        <Tab.Screen name={'Home'} options={{tabBarLabel: 'Főoldal'}} component={HomeScreen} />
+        <Tab.Screen name={'List'} options={{tabBarLabel: 'Lista'}} component={ListScreen} />
+        <Tab.Screen
+          name={'Statistics'}
+          options={{tabBarLabel: 'Statisztika'}}
+          component={StatisticsScreen}
+        />
       </Tab.Navigator>
     );
   }, []);

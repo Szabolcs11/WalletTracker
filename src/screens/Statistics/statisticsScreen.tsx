@@ -77,7 +77,7 @@ export default function StatisticsScreen() {
 
   return (
     <ScrollView style={Container}>
-      <Text style={TitleStyle}>Statistics</Text>
+      <Text style={TitleStyle}>{TEXTS.STATISTICS}</Text>
       <View style={{marginVertical: spacing.double}}>
         <GlobalDropDownPicker
           adddefaultitem={false}
