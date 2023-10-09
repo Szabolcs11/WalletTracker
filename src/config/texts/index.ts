@@ -1,19 +1,21 @@
 export const TEXTS = {
-    ADD_NEW_ITEM: "Add new item",
-    NAME: "Name",
-    AMOUNT: "Amount",
-    YES: "Yes",
-    NO: "No",
-    ARE_YOU_SURE_TO_DELETE: "Are you sure to dele this spending?",
-    ALL: "All",
-    ALL_DATE: "All date",
-    SELECT_DATE_ALL: "Select a date (All)",
-    SELECT_DATE: "Select a date",
-    SELECT_ITEM: "Select an item"
+    ADD_NEW_ITEM: "Új kiadás hozzáadása",
+    NAME: "Név",
+    AMOUNT: "Összeg",
+    YES: "Igen",
+    NO: "Nem",
+    ARE_YOU_SURE_TO_DELETE: "Biztosan törölni szeretné ezt a kiadást?",
+    ALL: "Minden",
+    ALL_DATE: "Minden dátum",
+    SELECT_DATE_ALL: "Válassz egy dátumot (Minden)",
+    SELECT_DATE: "Válassz egy dátumot",
+    SELECT_ITEM: "Válassz egy tételt",
+    EXPENSES: "Kiadások",
+    STATISTICS: "Statisztikák"
 }
 
 export const RESPONSES = {
-    FILL_THE_NAME: 'Fill the name!',
-    FILL_THE_AMOUNT: "Fill the amount!",
-    SUCCESSFULLY_ADDED_SPENDING: "Successfully added a spending!"
+    FILL_THE_NAME: 'Töltsd ki a nevet!',
+    FILL_THE_AMOUNT: "Töltsd ki az összeget!",
+    SUCCESSFULLY_ADDED_SPENDING: "Sikeresen hozzáadtál egy kiadást!"
 }
