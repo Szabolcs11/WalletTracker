@@ -1,4 +1,4 @@
-package com.wallettracker.dev;
+package com.wallettracker;
 
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 
