@@ -2,16 +2,17 @@ import { SpendingType, BarChartType } from "../types";
 import { getSpendings } from "./storage";
 
 const getWeekStartDate = (date: Date = new Date()) => {
-    const dayOfWeek = date.getUTCDay();
+    const dayOfWeek = date.getDay();
     const daysUntilSunday = (dayOfWeek - 1 + 7) % 7;
     const weekStartDate = new Date(date);
-    weekStartDate.setUTCDate(date.getUTCDate() - daysUntilSunday);
-    weekStartDate.setUTCHours(0, 0, 0, 0);
+    weekStartDate.setDate(date.getDate() - daysUntilSunday);
+    weekStartDate.setHours(0, 0, 0, 0);
     return weekStartDate;
 };
 
 // Return the spendings group by date [{weekRange, items: []}]
 export const getSpendingsGroupByDate = (data?: SpendingType[]) => {
+    // console.log(data)
     let alldata: SpendingType[];
     if (!data || data.length === 0) {
         alldata = getSpendings();
@@ -27,27 +28,47 @@ export const getSpendingsGroupByDate = (data?: SpendingType[]) => {
         const dateB = new Date(b.date);
         return dateA.getTime() - dateB.getTime();
     });
-
+    // console.log(alldata)
     const earliestDate = new Date(alldata[0]?.date);
+    // console.log(earliestDate)
     const latestDate = new Date(alldata[alldata.length - 1]?.date);
+    // console.log(latestDate)
 
     let currentWeekStart = getWeekStartDate(earliestDate);
+    // console.log(currentWeekStart)
     let all = [];
-
+    console.log('nextweekstart')
     while (currentWeekStart <= latestDate) {
         const nextWeekStart = new Date(currentWeekStart);
         nextWeekStart.setDate(currentWeekStart.getDate() + 6);
-        const weekRange = `${currentWeekStart.toISOString().split('T')[0]} - ${
+        // console.log(nextWeekStart)
+        const weekRange= `${currentWeekStart.toISOString().split('T')[0]} - ${
             nextWeekStart.toISOString().split('T')[0]
         }`;
+        // console.log(currentWeekStart)
+        // let a = currentWeekStart.getDate() + 1;
+        // console.log(a)
+        // console.log(currentWeekStart, nextWeekStart)
+        let asd:any[] = [];
         const weekData = alldata.filter((item) => {
             const itemDate = new Date(item.date);
-            itemDate.setUTCHours(0, 0, 0, 0);
+            itemDate.setHours(0, 0, 0, 0);
+            // console.log(itemDate >= currentWeekStart && itemDate <= nextWeekStart, itemDate)
+            if (itemDate >= currentWeekStart && itemDate <= nextWeekStart) {
+              // console.log("push", item, itemDate)
+              asd.push(item)
+            }
             return (
                 itemDate >= currentWeekStart && itemDate <= nextWeekStart
             );
         });
-
+        // currentWeekStart.setDate(currentWeekStart.getDate() + 1);
+        // nextWeekStart.setDate(nextWeekStart.getDate() + 1);
+        //  const weekRange= `${currentWeekStart.toISOString().split('T')[0]} - ${
+        //     nextWeekStart.toISOString().split('T')[0]
+        // }`;
+        // console.log("a", asd)
+        // console.log("aaaaaaa", weekData)
         let items: SpendingType[] = [];
         weekData.forEach(item => {
             items.push({
@@ -63,7 +84,14 @@ export const getSpendingsGroupByDate = (data?: SpendingType[]) => {
             const dateB = new Date(b.date).getTime();
             return dateB - dateA;
         });
-        all.push({ weekRange, items });
+        console.log(weekRange)
+        let split = weekRange.split(' - ')
+        let a = new Date(split[0]);
+        a.setDate(a.getDate() + 1);
+        let b = new Date(split[1]);
+        b.setDate(b.getDate() + 1);
+        let newWeekRange = `${a.toISOString().split('T')[0]} - ${b.toISOString().split('T')[0]}`
+        all.push({ weekRange: newWeekRange, items });
         currentWeekStart.setDate(currentWeekStart.getDate() + 7);
     }
 
@@ -72,6 +100,7 @@ export const getSpendingsGroupByDate = (data?: SpendingType[]) => {
         const dateB = new Date(b.weekRange.split(' - ')[0]).getTime();
         return dateB - dateA;
     });
+    console.log('--')
     return all;
 };
 
@@ -92,6 +121,7 @@ const translateDaysOfWeekToHungarian = (DayOfWeek: string) => {
         case "Sunday":
             return "Vasárnap"
         default:
+            return ""
       }
 }
 
@@ -198,7 +228,7 @@ export const getWeeksWithSpending = () => {
         currentWeekStart.setDate(currentWeekStart.getDate() + 7);
         weeks.push(weekRange)
     }
-    console.log("weeks", weeks)
+    // console.log("weeks", weeks)
     return weeks.reverse();
 }
 

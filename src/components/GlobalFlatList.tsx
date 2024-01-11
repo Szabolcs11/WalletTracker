@@ -1,18 +1,12 @@
 import {View, Text, FlatList, TouchableOpacity} from 'react-native';
 import React from 'react';
 import uuid from 'react-native-uuid';
-import {
-  FlatListItemStyle,
-  ItemTextStyle,
-} from '../screens/List/listScreenStyle';
+import {FlatListItemStyle, ItemTextStyle} from '../screens/List/listScreenStyle';
 import {formatDate} from '../config/globalFunctions';
 import {GlobalFlatListProps} from '../types';
 import {spacing} from '../style';
 
-export default function GlobalFlatList({
-  data,
-  selectItem,
-}: GlobalFlatListProps) {
+export default function GlobalFlatList({data, selectItem}: GlobalFlatListProps) {
   return (
     <FlatList
       contentContainerStyle={{
@@ -43,6 +37,7 @@ export default function GlobalFlatList({
                     <Text style={ItemTextStyle}>{e.category}</Text>
                     <Text style={ItemTextStyle}>{e.amount}</Text>
                     <Text style={ItemTextStyle}>{formatDate(e.date)}</Text>
+                    {/* <Text style={ItemTextStyle}>{formatDate(e.date) + ' | ' + e.date}</Text> */}
                   </TouchableOpacity>
                 );
               })}
