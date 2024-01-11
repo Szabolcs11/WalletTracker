@@ -12,7 +12,6 @@ const getWeekStartDate = (date: Date = new Date()) => {
 
 // Return the spendings group by date [{weekRange, items: []}]
 export const getSpendingsGroupByDate = (data?: SpendingType[]) => {
-    // console.log(data)
     let alldata: SpendingType[];
     if (!data || data.length === 0) {
         alldata = getSpendings();
@@ -28,47 +27,24 @@ export const getSpendingsGroupByDate = (data?: SpendingType[]) => {
         const dateB = new Date(b.date);
         return dateA.getTime() - dateB.getTime();
     });
-    // console.log(alldata)
     const earliestDate = new Date(alldata[0]?.date);
-    // console.log(earliestDate)
     const latestDate = new Date(alldata[alldata.length - 1]?.date);
-    // console.log(latestDate)
 
     let currentWeekStart = getWeekStartDate(earliestDate);
-    // console.log(currentWeekStart)
     let all = [];
-    console.log('nextweekstart')
     while (currentWeekStart <= latestDate) {
         const nextWeekStart = new Date(currentWeekStart);
         nextWeekStart.setDate(currentWeekStart.getDate() + 6);
-        // console.log(nextWeekStart)
         const weekRange= `${currentWeekStart.toISOString().split('T')[0]} - ${
             nextWeekStart.toISOString().split('T')[0]
         }`;
-        // console.log(currentWeekStart)
-        // let a = currentWeekStart.getDate() + 1;
-        // console.log(a)
-        // console.log(currentWeekStart, nextWeekStart)
-        let asd:any[] = [];
         const weekData = alldata.filter((item) => {
             const itemDate = new Date(item.date);
             itemDate.setHours(0, 0, 0, 0);
-            // console.log(itemDate >= currentWeekStart && itemDate <= nextWeekStart, itemDate)
-            if (itemDate >= currentWeekStart && itemDate <= nextWeekStart) {
-              // console.log("push", item, itemDate)
-              asd.push(item)
-            }
             return (
                 itemDate >= currentWeekStart && itemDate <= nextWeekStart
             );
         });
-        // currentWeekStart.setDate(currentWeekStart.getDate() + 1);
-        // nextWeekStart.setDate(nextWeekStart.getDate() + 1);
-        //  const weekRange= `${currentWeekStart.toISOString().split('T')[0]} - ${
-        //     nextWeekStart.toISOString().split('T')[0]
-        // }`;
-        // console.log("a", asd)
-        // console.log("aaaaaaa", weekData)
         let items: SpendingType[] = [];
         weekData.forEach(item => {
             items.push({
@@ -84,7 +60,6 @@ export const getSpendingsGroupByDate = (data?: SpendingType[]) => {
             const dateB = new Date(b.date).getTime();
             return dateB - dateA;
         });
-        console.log(weekRange)
         let split = weekRange.split(' - ')
         let a = new Date(split[0]);
         a.setDate(a.getDate() + 1);
@@ -100,7 +75,6 @@ export const getSpendingsGroupByDate = (data?: SpendingType[]) => {
         const dateB = new Date(b.weekRange.split(' - ')[0]).getTime();
         return dateB - dateA;
     });
-    console.log('--')
     return all;
 };
 
@@ -182,17 +156,18 @@ export const getWeeklySpendings = (weekRange: string) => {
 
 
   let lastNonZeroIndex = -1;
-
-  // Find the index of the last not zero spending entry
-  for (let i = spendingsByDay.length - 1; i >= 0; i--) {
-    if (spendingsByDay[i].Spendings !== 0) {
-      lastNonZeroIndex = i;
-      break;
+  const todayDate = new Date()
+  const dayKey = todayDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
+  if (todayDate <= endDate) {
+    for (let i = spendingsByDay.length - 1; i >= 0; i--) {
+      if (spendingsByDay[i].Date === dayKey) {
+        lastNonZeroIndex = i;
+        break;
+      }
     }
   }
 
   // If a last non-zero entry was found, remove subsequent entries with zero spending
-  const todayDate = new Date()
 
   if (lastNonZeroIndex !== -1) {
     spendingsByDay = spendingsByDay.filter((entry, index) => {
@@ -218,17 +193,18 @@ export const getWeeksWithSpending = () => {
     const latestDate = new Date(inputData[inputData.length - 1]?.date);
 
     let currentWeekStart = getWeekStartDate(earliestDate);
+    let newWeekStart = new Date(currentWeekStart);
+    newWeekStart.setDate(currentWeekStart.getDate() + 1);
     let weeks = []
-    while (currentWeekStart <= latestDate) {
-        const nextWeekStart = new Date(currentWeekStart);
-        nextWeekStart.setDate(currentWeekStart.getDate() + 6);
-        const weekRange = `${currentWeekStart.toISOString().split('T')[0]} - ${
+    while (newWeekStart <= latestDate) {
+        const nextWeekStart = new Date(newWeekStart);
+        nextWeekStart.setDate(newWeekStart.getDate() + 6);
+        const weekRange = `${newWeekStart.toISOString().split('T')[0]} - ${
             nextWeekStart.toISOString().split('T')[0]
         }`;
-        currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+        newWeekStart.setDate(newWeekStart.getDate() + 7);
         weeks.push(weekRange)
     }
-    // console.log("weeks", weeks)
     return weeks.reverse();
 }
 

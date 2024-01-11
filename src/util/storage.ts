@@ -33,3 +33,7 @@ export const clearAllSpending = () => {
 export const getSpendings = () => {
     return JSON.parse(storage.getString(key) || "[]") as SpendingType[];
 }
+
+export const getSpendingsInString = () => {
+    return storage.getString(key) || "[]";
+};

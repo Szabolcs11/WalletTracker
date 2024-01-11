@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {Clipboard, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {PieChart} from 'react-native-chart-kit';
 import GlobalBarChart from '../../components/GlobalBarChart/GlobalBarChart';
 import GlobalDropDownPicker from '../../components/GlobalDropDownPicker';
@@ -13,6 +13,7 @@ import {
 } from '../../util/formatSpendings';
 import {BarChartType, PieChartDataType} from './../../types/index';
 import LoadingComponent from '../../components/LoadingComponent';
+import {getSpendingsInString} from '../../util/storage';
 
 export let updateCharts: () => void;
 
@@ -99,6 +100,7 @@ export default function StatisticsScreen() {
             data={pieChartData}
             width={330}
             height={220}
+            style={{borderRadius: spacing.single}}
             chartConfig={{
               color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
               strokeWidth: 2,
@@ -115,9 +117,13 @@ export default function StatisticsScreen() {
             <Text style={{fontWeight: '600', marginVertical: spacing.half}}>
               A héten elköltött: {amountSpentInWeek} HUF
             </Text>
-            <Text style={{fontWeight: '600', marginVertical: spacing.half}}>
-              Összesen elköltött {totalAmountSpent} HUF
-            </Text>
+            <TouchableOpacity
+              delayLongPress={3000}
+              onLongPress={() => Clipboard.setString(getSpendingsInString())}>
+              <Text style={{fontWeight: '600', marginVertical: spacing.half}}>
+                Összesen elköltött {totalAmountSpent} HUF
+              </Text>
+            </TouchableOpacity>
           </View>
         ) : (
           <></>
